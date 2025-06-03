@@ -1,39 +1,29 @@
-
-
-
-
-
-
-# UTILIZAR MAIN2.PY
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import time
+import random
 
+# Constantes
 VIDA_MAXIMA = 100
 ENERGIA_MAXIMA = 100
+PONTUACAO_MAXIMA = 100
 TAMANHO_MOCHILA = 6
+
+vida = VIDA_MAXIMA
+energia = ENERGIA_MAXIMA
+pontuacao = 0
+mochila = []
+
+itens = {
+    'biscoito': {'regeneração': 25, 'energia': 30},
+    'energético': {'regeneração': 15, 'energia': 50},
+    'facão': {'dano': 35},
+    'banana': {'regeneração': 20, 'energia': 30}
+}
+
+animais = {
+    'lobo': {'dano': 10, 'vida': 90},
+    'cobra': {'dano': 5, 'vida': 50},
+    'urso': {'dano': 15, 'vida': 130}
+}
 
 def criar_pausa():
     for i in range(3):
@@ -45,9 +35,7 @@ def enviar_introducao():
     nome = str(input("""
 ==============================================================================
 SEJA BEM-VINDO AO FOREST GAME - SOBREVIVENDO NA FLORESTA!
-Este é um jogo de sobrevivência onde você precisa coletar recursos, enfrentar 
-desafios e voltar para casa. Você começa o jogo com vida e energia máxima,
-e ao decorrer do jogo você poderá restaurar esses atributos comendo e descansando.
+Você está perdido(a) na floresta após uma tempestade. Seu objetivo é sobreviver, coletar recursos e encontrar o caminho de volta para casa. Para isso, acumule pontos e encontre o mapa da saída.
 
 Digite seu nome: """))
     print(f"""
@@ -57,74 +45,60 @@ Boa Sorte {nome}!
     criar_pausa()
     return nome
 
-def mostrar_atributos(vida, energia, mochila):
-    print(f"=== Vida: {vida} ===")
-    print(f"=== Energia: {energia} ===")
-    print(f"=== Mochila: {mochila} ===\n")
+def mostrar_atributos(vida, energia, pontuacao, mochila):
+    print(f"\nVida: {vida} | Energia: {energia} | Pontuação: {pontuacao} | Mochila: {mochila}\n")
 
-def mostrar_opcoes():
-    opcao = int(input("""
-Digite sua opção:
-"""))
-
-
-while True:
-
-    vida = 100
-    energia = 100
-    mochila = []
-    pontuacao = 0
-
-    # Introdução do jogo - Recebe nome do jogador
-    jogador = enviar_introducao()
-
-    # 1ª Situação
-    print("\nVocê acorda em uma floresta densa e escura, e sua única lembrança é que aconteceu uma tempestade e você se perdeu no meio da trilha. Sem sinal no celular, agora você precisa sobreviver e voltar para casa. Logo, você encontra ao seu redor uma mochila e prontamente pega ela\n")
-    # mostrar_atributos(vida, energia, mochila)
+def explorar(vida):
+    print('\nVocê decide explorar a floresta e procurar por alguém')
     criar_pausa()
+    print('\nDepois de andar por um tempo, você finalmente encontra algo. Existem rastros indo para uma caverna, você se aproxima e ...')   
 
-    opcao = int(input("""
-[1] Olhar dentro da mochila
-[2] Começa a explorar a floresta
-[3] Gritar por ajuda
+    animal = random.choice(list(animais.keys()))
+    dano = animais[animal]['dano']
 
-[4] Ver atributos              
-[5] Sair do jogo 
-
-Digite sua opção: """))
-
-    if opcao == 1:
-        print('\nVocê olha dentro da mochila e encontra duas maças, elas parecem saborosas')
-        mochila.append('maçã')
-        mochila.append('maçã')
-        opcao = int(input("""
-[1] Pega e come a maçã da mochila
-[2] Começa a explorar a floresta
-[3] Gritar por ajuda
-
-[4] Ver atributos              
-[5] Sair do jogo 
-
-Digite sua opção: """))
-
-    elif opcao == 2:
-        print('\nVocê começa a andar pela floresta, a princípio, sem rumo algum.')
-        criar_pausa()
-        print('Depois de tanto andar, você finalmente encontra algo, pegadas de algum animal estão indo para uma caverna!')
-        continue
-
-    elif opcao == 3:
-        print('\nVocê grita por ajuda')
-        criar_pausa()
-        print('\nSeus gritos são inuteis, você percebe que não há absolutamente ninguém na floresta além de você')
-        continue
-
-    elif opcao == 4:
-        mostrar_atributos(vida, energia, mochila)
-
-    elif opcao == 5:
-        print('Até logo...')
-        break
+    print(f'Você é atacado por um(a) {animal} selvagem e perde {dano} pontos de vida!')
+    
+    print(f"Escolha sua ação:")
+    print('(1) Atacar com facão ')
+    print('(2) Usar item da mochila')
+    print('(3) Fugir')
+    opcao = int(input('Digite o número da ação desejada: '))
+    
+    if opcao == '1':
+        # CRIAR FUNÇÂO
+        return
+    
+    elif opcao == '2':
+        # CRIAR FUNÇÂO
+        return
+    
+    elif opcao == '3':
+        # CRIAR FUNÇÂO
+        return
     
 
+nome = enviar_introducao()
+
+while True:
+    mostrar_atributos(vida, energia, pontuacao, mochila)
+    print("Escolha sua ação:")
+    print("(1) Buscar comida")
+    print("(2) Montar abrigo")
+    print("(3) Explorar a floresta")
+    print("(4) Usar item da mochila")
+    acao = input("Digite o número da ação desejada: ")
+
+    if acao == '1':
+        break
+        # CRIAR FUNÇÃO ----> buscar_comida()
+    elif acao == '2':
+        break
+        # CRIAR FUNÇÃO ----> montar_abrigo()
+    elif acao == '3':
+        explorar(vida)
         
+    elif acao == '4':
+        # CRIAR FUNÇÃO ----> usar_item()
+        break
+    else:
+        print("Ação inválida.")
