@@ -1,5 +1,6 @@
 # Outra tentativa
 import time
+import random
 
 VIDA_MAXIMA = 100
 ENERGIA_MAXIMA = 100
@@ -11,10 +12,17 @@ energia = ENERGIA_MAXIMA
 pontuacao = 0
 mochila = []
 
+itens = {
+    'biscoito': {'regeneração': 25, 'energia': 30},
+    'energético': {'regeneração': 15, 'energia': 50},
+    'facão': {'dano': 35},
+    'banana': {'regeneração': 20, 'energia': 30}
+}
+
 animais = {
-    'lobo': {'dano': 10},
-    'cobra': {'dano': 5},
-    'urso': {'dano': 15}
+    'lobo': {'dano': 10, 'vida': 90},
+    'cobra': {'dano': 5, 'vida': 50},
+    'urso': {'dano': 15, 'vida': 130}
 }
 
 def criar_pausa():
@@ -43,10 +51,19 @@ def mostrar_atributos(vida, energia, pontuacao, mochila):
 def explorar(vida):
     print('\nVocê decide explorar a floresta e procurar por alguém')
     criar_pausa()
-    print('\nDepois de andar por um tempo, você finalmente encontra algo. Existem pegadas indo para uma caverna, você se aproxima e ...')
-    print('Você é atacado por um lobo selvagem e perde 10 pontos de vida!')
-    dano = 10
-    return vida - dano
+    print('\nDepois de andar por um tempo, você finalmente encontra algo. Existem rastros indo para uma caverna, você se aproxima e ...')   
+
+    animal = random.choice(list(animais.keys()))
+    dano = animais[animal]['dano']
+
+    print(f'Você é atacado por um(a) {animal} selvagem e perde {dano} pontos de vida!')
+    
+    opcao = int(input("""
+Escolha sua opção
+
+
+"""))
+    
 
 nome = enviar_introducao()
 
@@ -61,15 +78,15 @@ while True:
 
     if acao == '1':
         break
-        #buscar_comida()
+        # CRIAR FUNÇÃO ----> buscar_comida()
     elif acao == '2':
         break
-        #montar_abrigo()
+        # CRIAR FUNÇÃO ----> montar_abrigo()
     elif acao == '3':
         explorar(vida)
         
     elif acao == '4':
-        #usar_item()
+        # CRIAR FUNÇÃO ----> usar_item()
         break
     else:
         print("Ação inválida.")
