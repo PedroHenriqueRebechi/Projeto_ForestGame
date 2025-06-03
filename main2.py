@@ -59,7 +59,7 @@ def explorar(vida):
     print(f'Você é atacado por um(a) {animal} selvagem e perde {dano} pontos de vida!')
     
     opcao = int(input("""
-Escolha sua opção
+Escolha sua ação:
 
 
 """))
