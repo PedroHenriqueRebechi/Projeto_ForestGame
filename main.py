@@ -49,6 +49,45 @@ Boa Sorte {nome}!
 
     criar_pausa()
     return nome
+def combate():
+    global vida
+    animal = random.choice(list(animais.keys()))
+    dano = animais[animal]['dano']
+
+    print(f'\nVocê é atacado por um(a) {animal} e perde {dano} pontos de vida!')
+    vida_animal = animais[animal]['vida']
+    print("Escolha sua ação:")
+    print('(1) Atacar com facão')
+    print('(2) Usar item da mochila')
+    print('(3) Fugir')
+    opcao = int(input('Digite o número da ação desejada: '))
+
+    if opcao == 1:
+        vida_animal -= itens['facão']['dano']
+        print(f'\nVocê atacou o {animal} e agora a vida dele está em {vida_animal}')
+        if vida_animal <= 0:
+            print(f"\nParabéns, você derrotou o {animal}!!")
+            criar_pausa()
+            print(f'\nVocê ganhou -- ') #criar funcionamento de pontos 
+        else:
+            criar_pausa()
+            print(f"\nO {animal} atacou você e tirou mais {dano} pontos de vida!!")
+    
+    elif opcao == 2:
+        print(mochila)
+        #terminar função
+
+    elif opcao == 3:
+        chance = random.randint(1,2,3)
+        if chance == 1:
+            print(f'\nVocê tentou fugir, mas o {animal} te atacou e tirou {dano} pontos de vida')
+        elif chance == 2:
+            print(f'\nEssa foi por pouco!! o {animal} errou o ataque, mas você não conseguiu fugir')
+        else:
+            print('\nVocê escapou dos ataques e conseguiu fugir!!')
+    else:
+        print("opção invalida, tente novamente")
+        return
 
 def mostrar_atributos(vida, energia, pontuacao, mochila):
     print(f"\nVida: {vida} | Energia: {energia} | Pontuação: {pontuacao} | Mochila: {mochila}\n")
@@ -122,6 +161,8 @@ def montar_abrigo():
 
             if opcao == 1:
                 print("Você ataca com facão!")
+                vida_animal= animais[animal]['vida']
+                vida_animal= vida_animal - itens['facão']['dano']
             elif opcao == 2:
                 print("Você tenta usar um item!")
             elif opcao == 3:
@@ -155,7 +196,6 @@ while True:
     elif acao == '2':
         montar_abrigo()
         break
-        # CRIAR FUNÇÃO ----> montar_abrigo()
     elif acao == '3':
         explorar(vida)
         
