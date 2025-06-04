@@ -62,39 +62,46 @@ def combate():
 
     vida -= dano
 
-    print("Escolha sua ação:")
-    print('(1) Atacar com facão')
-    print('(2) Usar item da mochila')
-    print('(3) Fugir')
-    opcao = int(input('Digite o número da ação desejada: '))
+    while vida_animal > 0:
+        print("Escolha sua ação:")
+        print('(1) Atacar com facão')
+        print('(2) Usar item da mochila')
+        print('(3) Fugir')
+        opcao = int(input('Digite o número da ação desejada: '))
 
-    if opcao == 1:
-        vida_animal -= itens['facão']['dano']
-        print(f'\nVocê atacou o {animal} e agora a vida dele está em {vida_animal}')
-        if vida_animal <= 0:
-            print(f"\nParabéns, você derrotou o {animal}!!")
-            criar_pausa()
-            print(f'\nVocê ganhou -- ') #criar funcionamento de pontos 
+        if opcao == 1:
+            vida_animal -= itens['facão']['dano']
+            print(f'\nVocê atacou o {animal} e agora a vida dele está em {vida_animal}')
+            if vida_animal <= 0:
+                print(f"\nParabéns {nome}, você derrotou o {animal}!!")
+                criar_pausa()
+                print(f'\nVocê ganhou -- ') #criar funcionamento de pontos 
+            else:
+                criar_pausa()
+                print(f"\nVocê atacou o {animal} e causou {dano} pontos de dano!")
+                
+        
+        elif opcao == 2:
+            print(mochila)
+            #terminar função
+
+        elif opcao == 3:
+            chance = random.randint(1,3)
+            if chance == 1:
+                print(f'\nVocê tentou fugir, mas o {animal} te atacou e tirou {dano} pontos de vida')
+            elif chance == 2:
+                print(f'\nEssa foi por pouco!! o {animal} errou o ataque, mas você não conseguiu fugir')
+            else:
+                print('\nVocê escapou dos ataques e conseguiu fugir!!')
+                return
         else:
-            criar_pausa()
-            print(f"\nVocê atacou o {animal} e causou {dano} pontos de dano!")
-            
+            print("opção invalida, tente novamente")
+            return
     
-    elif opcao == 2:
-        print(mochila)
-        #terminar função
+    
+    
 
-    elif opcao == 3:
-        chance = random.randint(1,3)
-        if chance == 1:
-            print(f'\nVocê tentou fugir, mas o {animal} te atacou e tirou {dano} pontos de vida')
-        elif chance == 2:
-            print(f'\nEssa foi por pouco!! o {animal} errou o ataque, mas você não conseguiu fugir')
-        else:
-            print('\nVocê escapou dos ataques e conseguiu fugir!!')
-    else:
-        print("opção invalida, tente novamente")
-        return
+    
 
 def mostrar_atributos():
     global vida
@@ -104,7 +111,7 @@ def mostrar_atributos():
 
     return print(f"\nVida: {vida} | Energia: {energia} | Pontuação: {pontuacao} | Mochila: {mochila}")
 
-def explorar(vida):
+def explorar():
     print('\nVocê decide explorar a floresta e procurar por alguém')
     criar_pausa()
     print('\nDepois de andar por um tempo, você finalmente encontra algo. Existem rastros indo para uma caverna, você se aproxima e\n',)
@@ -112,30 +119,6 @@ def explorar(vida):
     mostrar_atributos()
     combate()
     mostrar_atributos()
-
-
-    # animal = random.choice(list(animais.keys()))
-    # dano = animais[animal]['dano']
-
-    # print(f'Você é atacado por um(a) {animal} selvagem e perde {dano} pontos de vida!')
-    
-    # print(f"Escolha sua ação:")
-    # print('(1) Atacar com facão ')
-    # print('(2) Usar item da mochila')
-    # print('(3) Fugir')
-    # opcao = int(input('Digite o número da ação desejada: '))
-    
-    # if opcao == '1':
-    #     # CRIAR FUNÇÂO
-    #     return
-    
-    # elif opcao == '2':
-    #     # CRIAR FUNÇÂO
-    #     return
-    
-    # elif opcao == '3':
-    #     # CRIAR FUNÇÂO
-    #     return
     
 def montar_abrigo():
     global abrigo
@@ -311,7 +294,7 @@ while True:
         montar_abrigo()
         break
     elif acao == '3':
-        explorar(vida)
+        explorar()
         
     elif acao == '4':
         # CRIAR FUNÇÃO ----> usar_item()
