@@ -30,12 +30,14 @@ durabilidade_abrigo = {
     'abrigo médio': {'durabilidade': 45},
     'abrigo forte': {'durabilidade': 60}
 }
+
 def criar_pausa():
     for i in range(3):
         print(".", end="")
         time.sleep(0.5)
 
 def enviar_introducao():
+
     # Mensagem inicial - Solicita nome do jogador
     nome = str(input("""
 ==============================================================================
@@ -49,13 +51,17 @@ Boa Sorte {nome}!
 
     criar_pausa()
     return nome
+
 def combate():
     global vida
     animal = random.choice(list(animais.keys()))
     dano = animais[animal]['dano']
+    vida_animal = animais[animal]['vida']
 
     print(f'\nVocê é atacado por um(a) {animal} e perde {dano} pontos de vida!')
-    vida_animal = animais[animal]['vida']
+
+    vida -= dano
+
     print("Escolha sua ação:")
     print('(1) Atacar com facão')
     print('(2) Usar item da mochila')
@@ -71,7 +77,8 @@ def combate():
             print(f'\nVocê ganhou -- ') #criar funcionamento de pontos 
         else:
             criar_pausa()
-            print(f"\nO {animal} atacou você e tirou mais {dano} pontos de vida!!")
+            print(f"\nVocê atacou o {animal} e causou {dano} pontos de dano!")
+            
     
     elif opcao == 2:
         print(mochila)
@@ -89,36 +96,46 @@ def combate():
         print("opção invalida, tente novamente")
         return
 
-def mostrar_atributos(vida, energia, pontuacao, mochila):
-    print(f"\nVida: {vida} | Energia: {energia} | Pontuação: {pontuacao} | Mochila: {mochila}\n")
+def mostrar_atributos():
+    global vida
+    global energia
+    global pontuacao
+    global mochila
+
+    return print(f"\nVida: {vida} | Energia: {energia} | Pontuação: {pontuacao} | Mochila: {mochila}")
 
 def explorar(vida):
     print('\nVocê decide explorar a floresta e procurar por alguém')
     criar_pausa()
-    print('\nDepois de andar por um tempo, você finalmente encontra algo. Existem rastros indo para uma caverna, você se aproxima e ...')   
+    print('\nDepois de andar por um tempo, você finalmente encontra algo. Existem rastros indo para uma caverna, você se aproxima e\n',)
+    criar_pausa()   
+    mostrar_atributos()
+    combate()
+    mostrar_atributos()
 
-    animal = random.choice(list(animais.keys()))
-    dano = animais[animal]['dano']
 
-    print(f'Você é atacado por um(a) {animal} selvagem e perde {dano} pontos de vida!')
+    # animal = random.choice(list(animais.keys()))
+    # dano = animais[animal]['dano']
+
+    # print(f'Você é atacado por um(a) {animal} selvagem e perde {dano} pontos de vida!')
     
-    print(f"Escolha sua ação:")
-    print('(1) Atacar com facão ')
-    print('(2) Usar item da mochila')
-    print('(3) Fugir')
-    opcao = int(input('Digite o número da ação desejada: '))
+    # print(f"Escolha sua ação:")
+    # print('(1) Atacar com facão ')
+    # print('(2) Usar item da mochila')
+    # print('(3) Fugir')
+    # opcao = int(input('Digite o número da ação desejada: '))
     
-    if opcao == '1':
-        # CRIAR FUNÇÂO
-        return
+    # if opcao == '1':
+    #     # CRIAR FUNÇÂO
+    #     return
     
-    elif opcao == '2':
-        # CRIAR FUNÇÂO
-        return
+    # elif opcao == '2':
+    #     # CRIAR FUNÇÂO
+    #     return
     
-    elif opcao == '3':
-        # CRIAR FUNÇÂO
-        return
+    # elif opcao == '3':
+    #     # CRIAR FUNÇÂO
+    #     return
     
 def montar_abrigo():
     global abrigo
@@ -127,7 +144,7 @@ def montar_abrigo():
     while True:
         print('\nVocê decide montar um abrigo')
         criar_pausa()
-        print('Após um tempo de exploração, você encontra alguns galhos, pedras e folhas.')
+        print('\nApós um tempo de exploração, você encontra alguns galhos, pedras e folhas.')
         print('Deseja criar um abrigo agora ou continuar explorando para conseguir mais recursos?')
 
         print("\nEscolha sua ação:")
@@ -182,7 +199,7 @@ def montar_abrigo():
 nome = enviar_introducao()
 
 while True:
-    mostrar_atributos(vida, energia, pontuacao, mochila)
+    mostrar_atributos()
     print("Escolha sua ação:")
     print("(1) Buscar comida")
     print("(2) Montar abrigo")
