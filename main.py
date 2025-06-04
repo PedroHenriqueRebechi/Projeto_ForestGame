@@ -25,6 +25,7 @@ animais = {
     'cobra': {'dano': 5, 'vida': 50},
     'urso': {'dano': 15, 'vida': 130}
 }
+
 durabilidade_abrigo = {
     'abrigo fraco': {'durabilidade': 20},
     'abrigo médio': {'durabilidade': 45},
@@ -55,12 +56,13 @@ Boa Sorte {nome}!
 def combate():
     global vida
     animal = random.choice(list(animais.keys()))
-    dano = animais[animal]['dano']
+    dano_do_animal = animais[animal]['dano']
     vida_animal = animais[animal]['vida']
 
-    print(f'\nVocê é atacado por um(a) {animal} e perde {dano} pontos de vida!')
+    print(f'\nVocê é atacado por um(a) {animal} e perde {dano_do_animal} pontos de vida!')
 
-    vida -= dano
+    vida -= dano_do_animal
+    mostrar_atributos()
 
     while vida_animal > 0:
         print("Escolha sua ação:")
@@ -70,16 +72,24 @@ def combate():
         opcao = int(input('Digite o número da ação desejada: '))
 
         if opcao == 1:
-            vida_animal -= itens['facão']['dano']
-            print(f'\nVocê atacou o {animal} e agora a vida dele está em {vida_animal}')
+
             if vida_animal <= 0:
-                print(f"\nParabéns {nome}, você derrotou o {animal}!!")
+                print(f"\nParabéns {nome}, você derrotou o(a) {animal}!!")
                 criar_pausa()
                 print(f'\nVocê ganhou -- ') #criar funcionamento de pontos 
             else:
                 criar_pausa()
-                print(f"\nVocê atacou o {animal} e causou {dano} pontos de dano!")
-                
+                print(f"\nVocê atacou o(a) {animal} e causou {dano_do_animal} pontos de dano!")
+                vida_animal -= itens['facão']['dano']
+                print(f'\nAgora a vida do(a) {animal} está em {vida_animal}')
+
+            chance_de_ataque_animal = random.choice([True,False])
+            if chance_de_ataque_animal:
+                print(f'\nVocê é atacado pelo(a) {animal} novamente e perde {dano_do_animal} pontos de vida!')
+                vida -= dano_do_animal
+                mostrar_atributos()
+            else:
+                print(f'Você desviou do ataque do(a) {animal}!\n')
         
         elif opcao == 2:
             print(mochila)
@@ -88,7 +98,8 @@ def combate():
         elif opcao == 3:
             chance = random.randint(1,3)
             if chance == 1:
-                print(f'\nVocê tentou fugir, mas o {animal} te atacou e tirou {dano} pontos de vida')
+                print(f'\nVocê tentou fugir, mas o {animal} te atacou e tirou {dano_do_animal} pontos de vida')
+                mostrar_atributos()
             elif chance == 2:
                 print(f'\nEssa foi por pouco!! o {animal} errou o ataque, mas você não conseguiu fugir')
             else:
@@ -111,9 +122,8 @@ def explorar():
     criar_pausa()
     print('\nDepois de andar por um tempo, você finalmente encontra algo. Existem rastros indo para uma caverna, você se aproxima e\n',)
     criar_pausa()   
-    mostrar_atributos()
     combate()
-    mostrar_atributos()
+    # mostrar_atributos()
     
 def montar_abrigo():
     global abrigo
@@ -271,6 +281,11 @@ def buscar_comida():
              return
 
 def usar_item():
+    print('Você olha dentro de sua mochila e pega:')
+    
+    for item in mochila:
+        print(item)
+
     return
 
 nome = enviar_introducao()
@@ -294,7 +309,7 @@ while True:
         explorar()
         
     elif acao == '4':
-        # CRIAR FUNÇÃO ----> usar_item()
-        break
+        usar_item()
+
     else:
         print("Ação inválida.")
