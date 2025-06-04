@@ -97,11 +97,6 @@ def combate():
         else:
             print("opção invalida, tente novamente")
             return
-    
-    
-    
-
-    
 
 def mostrar_atributos():
     global vida
@@ -274,8 +269,10 @@ def buscar_comida():
              criar_pausa()
              print("escolha invalida")
              return
-            
-                       
+
+def usar_item():
+    return
+
 nome = enviar_introducao()
 
 while True:
