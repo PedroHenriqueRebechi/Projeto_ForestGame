@@ -36,6 +36,11 @@ def criar_pausa():
         print(".", end="")
         time.sleep(0.5)
 
+def criar_pausa_maior():
+    for i in range(3):
+        print(".", end="")
+        time.sleep(0.10)
+
 def enviar_introducao():
 
     # Mensagem inicial - Solicita nome do jogador
