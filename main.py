@@ -98,8 +98,7 @@ def combate():
                 print(f'Você desviou do ataque do(a) {animal}!\n')
         
         elif opcao == 2:
-            print(mochila)
-            #terminar função
+            usar_item()
 
         elif opcao == 3:
             chance = random.randint(1,3)
@@ -112,26 +111,6 @@ def combate():
                 print('\nVocê escapou dos ataques e conseguiu fugir!!')
                 return
         else:
-<<<<<<< HEAD
-            criar_pausa()
-            print(f"\nO {animal} atacou você e tirou mais {dano} pontos de vida!!")
-    
-    elif opcao == 2:
-        usar_item()
-        print("Enquanto você usava o item, o inimigo aproveitou para atacar!")
-        vida -= dano
-    elif opcao == 3:
-        chance = random.randint(1,3)
-        if chance == 1:
-            print(f'\nVocê tentou fugir, mas o {animal} te atacou e tirou {dano} pontos de vida')
-        elif chance == 2:
-            print(f'\nEssa foi por pouco!! o {animal} errou o ataque, mas você não conseguiu fugir')
-        else:
-            print('\nVocê escapou dos ataques e conseguiu fugir!!')
-    else:
-        print("opção invalida, tente novamente")
-        return
-=======
             print("opção invalida, tente novamente")
             return
 
@@ -140,24 +119,17 @@ def mostrar_atributos():
     global energia
     global pontuacao
     global mochila
->>>>>>> 91b6df741ca578ba6756649766cb918f7ae99e11
 
     return print(f"\nVida: {vida} | Energia: {energia} | Pontuação: {pontuacao} | Mochila: {mochila}")
 
 def explorar():
     print('\nVocê decide explorar a floresta e procurar por alguém')
     criar_pausa()
-<<<<<<< HEAD
-    print('\nDepois de andar por um tempo, você finalmente encontra algo. Existem rastros indo para uma caverna, você se aproxima e ...')   
-    combate()
-
-=======
     print('\nDepois de andar por um tempo, você finalmente encontra algo. Existem rastros indo para uma caverna, você se aproxima e\n',)
     criar_pausa()   
     combate()
     # mostrar_atributos()
     
->>>>>>> 91b6df741ca578ba6756649766cb918f7ae99e11
 def montar_abrigo():
     global abrigo
     nivel_exploracao = 0
@@ -291,7 +263,6 @@ def buscar_comida():
              criar_pausa()
              print("escolha invalida")
              return
-<<<<<<< HEAD
 def usar_item():
     global vida, energia, mochila
     if not mochila:
@@ -332,40 +303,6 @@ while True:
         print(f"\n{nome}, você morreu na floresta... ☠️")
         print("GAME OVER")
         break
-=======
-
-def usar_item():
-    print('Você olha dentro de sua mochila e pega:')
-    
-    for item in mochila:
-        print(item)
-
-    return
-
-nome = enviar_introducao()
-
-while True:
-    mostrar_atributos()
-    print("Escolha sua ação:")
-    print("(1) Buscar comida")
-    print("(2) Montar abrigo")
-    print("(3) Explorar a floresta")
-    print("(4) Usar item da mochila")
-    acao = input("Digite o número da ação desejada: ")
-
-    if acao == '1':
-        buscar_comida()
-        break
-    elif acao == '2':
-        montar_abrigo()
-        break
-    elif acao == '3':
-        explorar()
-        
-    elif acao == '4':
-        usar_item()
-
->>>>>>> 91b6df741ca578ba6756649766cb918f7ae99e11
     else:
         print("Escolha sua ação:")
         print("(1) Buscar comida")
