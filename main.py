@@ -74,9 +74,9 @@ def combate():
             print(f"\nO {animal} atacou você e tirou mais {dano} pontos de vida!!")
     
     elif opcao == 2:
-        print(mochila)
-        #terminar função
-
+        usar_item()
+        print("Enquanto você usava o item, o inimigo aproveitou para atacar!")
+        vida -= dano
     elif opcao == 3:
         chance = random.randint(1,3)
         if chance == 1:
@@ -96,30 +96,8 @@ def explorar(vida):
     print('\nVocê decide explorar a floresta e procurar por alguém')
     criar_pausa()
     print('\nDepois de andar por um tempo, você finalmente encontra algo. Existem rastros indo para uma caverna, você se aproxima e ...')   
+    combate()
 
-    animal = random.choice(list(animais.keys()))
-    dano = animais[animal]['dano']
-
-    print(f'Você é atacado por um(a) {animal} selvagem e perde {dano} pontos de vida!')
-    
-    print(f"Escolha sua ação:")
-    print('(1) Atacar com facão ')
-    print('(2) Usar item da mochila')
-    print('(3) Fugir')
-    opcao = int(input('Digite o número da ação desejada: '))
-    
-    if opcao == '1':
-        # CRIAR FUNÇÂO
-        return
-    
-    elif opcao == '2':
-        # CRIAR FUNÇÂO
-        return
-    
-    elif opcao == '3':
-        # CRIAR FUNÇÂO
-        return
-    
 def montar_abrigo():
     global abrigo
     nivel_exploracao = 0
@@ -149,27 +127,7 @@ def montar_abrigo():
             break
 
         elif escolha == '2':
-            animal = random.choice(list(animais.keys()))
-            dano = animais[animal]['dano']
-
-            print(f'\nVocê é atacado por um(a) {animal} e perde {dano} pontos de vida!')
-            print("Escolha sua ação:")
-            print('(1) Atacar com facão')
-            print('(2) Usar item da mochila')
-            print('(3) Fugir')
-            opcao = int(input('Digite o número da ação desejada: '))
-
-            if opcao == 1:
-                print("Você ataca com facão!")
-                vida_animal= animais[animal]['vida']
-                vida_animal= vida_animal - itens['facão']['dano']
-            elif opcao == 2:
-                print("Você tenta usar um item!")
-            elif opcao == 3:
-                print("Você tenta fugir!")
-            else:
-                print("Opção inválida.")
-
+            combate()
             nivel_exploracao += 1
             if nivel_exploracao > 2:
                 print("\nVocê já explorou o suficiente para construir o abrigo mais forte possível.")
@@ -242,8 +200,7 @@ def buscar_comida():
                         print(f"\nO {animal_aleatorio} atacou você e tirou mais {dano} pontos de vida!!")
                 
                 elif opcao == 2:
-                    print(mochila)
-                    #terminar função
+                    usar_item()
 
                 elif opcao == 3:
                     chance = random.randint(1,3)
@@ -274,30 +231,62 @@ def buscar_comida():
              criar_pausa()
              print("escolha invalida")
              return
-            
-                       
+def usar_item():
+    global vida, energia, mochila
+    if not mochila:
+        print("\nSua mochila está vazia!")
+        return False
+
+    print("\nItens disponíveis na mochila:")
+    for i, item in enumerate(mochila):
+        print(f"({i}) {item}")
+
+    try:
+        escolha = int(input("Digite o número do item que deseja usar: "))
+        if 0 <= escolha < len(mochila):
+            item = mochila.pop(escolha)
+            dados_item = itens.get(item, {})
+
+            if dados_item.get('tipo') in ['comida', 'bebida']:
+                vida = min(VIDA_MAXIMA, vida + dados_item.get('regeneração', 0))
+                energia = min(ENERGIA_MAXIMA, energia + dados_item.get('energia', 0))
+                print(f"\nVocê usou {item}. Vida atual: {vida}, Energia atual: {energia}")
+                return True
+            else:
+                print(f"\n{item} não pode ser usado diretamente.")
+                mochila.append(item)
+                return False
+        else:
+            print("\nEscolha inválida.")
+            return False
+    except ValueError:
+        print("\nEntrada inválida. Use um número.")
+        return False
+                          
 nome = enviar_introducao()
 
 while True:
     mostrar_atributos(vida, energia, pontuacao, mochila)
-    print("Escolha sua ação:")
-    print("(1) Buscar comida")
-    print("(2) Montar abrigo")
-    print("(3) Explorar a floresta")
-    print("(4) Usar item da mochila")
-    acao = input("Digite o número da ação desejada: ")
-
-    if acao == '1':
-        buscar_comida()
-        break
-    elif acao == '2':
-        montar_abrigo()
-        break
-    elif acao == '3':
-        explorar(vida)
-        
-    elif acao == '4':
-        # CRIAR FUNÇÃO ----> usar_item()
+    if vida <= 0:
+        print(f"\n{nome}, você morreu na floresta... ☠️")
+        print("GAME OVER")
         break
     else:
-        print("Ação inválida.")
+        print("Escolha sua ação:")
+        print("(1) Buscar comida")
+        print("(2) Montar abrigo")
+        print("(3) Explorar a floresta")
+        print("(4) Usar item da mochila")
+        acao = input("Digite o número da ação desejada: ")
+
+        if acao == '1':
+            buscar_comida()
+        elif acao == '2':
+            montar_abrigo()
+        elif acao == '3':
+            explorar(vida)
+            
+        elif acao == '4':
+            usar_item()
+        else:
+            print("Ação inválida.")
