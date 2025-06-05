@@ -61,6 +61,7 @@ Boa Sorte {nome}!
 def combate():
     global vida
     animal = random.choice(list(animais.keys()))
+    dano = itens['facão']['dano']
     dano_do_animal = animais[animal]['dano']
     vida_animal = animais[animal]['vida']
 
@@ -84,7 +85,7 @@ def combate():
                 print(f'\nVocê ganhou -- ') #criar funcionamento de pontos 
             else:
                 criar_pausa()
-                print(f"\nVocê atacou o(a) {animal} e causou {dano_do_animal} pontos de dano!")
+                print(f"\nVocê atacou o(a) {animal} e causou {dano} pontos de dano!")
                 vida_animal -= itens['facão']['dano']
                 print(f'\nAgora a vida do(a) {animal} está em {vida_animal}')
 
