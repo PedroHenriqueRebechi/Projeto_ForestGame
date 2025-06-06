@@ -174,37 +174,37 @@ def buscar_comida():
     global vida, energia, mochila
     print('\nVocê decide sair em busca de comida')
     criar_pausa()
-    comidas= random.choice(list(itens.keys()))
-    encontrou_animal= random.choice([True,False])
-    tipo_item= itens[comidas].get ('tipo')
+    comidas = random.choice(list(itens.keys()))
+    encontrou_animal = random.choice([True,False])
+    tipo_item = itens[comidas].get ('tipo')
 
     while tipo_item not in ['comida', 'bebida']:
-         comidas= random.choice(list(itens.keys()))
-         tipo_item= itens[comidas].get ('tipo')
+         comidas = random.choice(list(itens.keys()))
+         tipo_item = itens[comidas].get ('tipo')
 
     if encontrou_animal:
-         animal_aleatorio= random.choice(list(animais.keys()))
-         print(f'\nVocê avista um(a) {animal_aleatorio} e ele está com um monte de {comidas}')
-         print(f'\n(1) Pegar escondido e fugir')
-         print(f'(2) ataque surpresa no(a) {animal_aleatorio} e pegar mais de um item')
-         print('(3) continuar explorando')
-         escolha= int(input("Qual será sua escolha? "))
+        animal_aleatorio = random.choice(list(animais.keys()))
+        print(f'\nVocê avista um(a) {animal_aleatorio} e atrás dele(a) estão um monte de {comidas}s')
+        print(f'\n(1) Pegar escondido e fugir')
+        print(f'(2) Atacar o(a) {animal_aleatorio} e tentar pegar mais de um(a) {comidas}')
+        print('(3) continuar explorando')
+        escolha = int(input("Qual será sua escolha? "))
          
-         if escolha == 1:
+        if escolha == 1:
             criar_pausa()
             chance = random.randint(1, 4)
             if chance == 1:
                 dano = animais[animal_aleatorio]['dano']
                 vida -= dano
                 print(f'\nO(a) {animal_aleatorio} te viu! Você foi atacado e perdeu {dano} de vida.') 
-                print(f'\nVocê teve que fugir, mais sorte na próxima, o(a) {animal_aleatorio} não é brincadeira!!')
+                print(f'Você teve que fugir, mais sorte na próxima, o(a) {animal_aleatorio} não é brincadeira!!')
             else:
                 if len(mochila) < TAMANHO_MOCHILA:
                     mochila.append(comidas)
                     print(f'\nVocê conseguiu pegar o(a) {comidas} e fugir sem ser visto!')
                 else:
                     print('\nVocê conseguiu pegar, mas a mochila está cheia e teve que deixar o item para trás.')
-         elif escolha == 2:
+        elif escolha == 2:
             criar_pausa()
             if 'facão' in mochila:
                 vida_animal = animais[animal_aleatorio]['vida']
@@ -246,24 +246,31 @@ def buscar_comida():
                 else:
                     print("opção invalida, tente novamente")
                     return
-         if escolha == 3: 
-             criar_pausa()
-             chance = random.randint(1,4)
-             if chance == 4:
-                 energia -= 10
-                 print (f'\nVocê não encontrou nada e ainda perdeu 10 de energia, agora sua energia é {energia}')
-             else:
-                 banana = itens['banana']
-                 energia -=10
-                 print(f'\nVocê encontrou uma banana, parabens!')
-                 if len (mochila) < TAMANHO_MOCHILA:
+        elif escolha == 3: 
+            criar_pausa()
+            chance = random.randint(1,4)
+            if chance == 4:
+                energia -= 10
+                print (f'\nVocê não encontrou nada e ainda perdeu 10 de energia, agora sua energia é {energia}')
+            else:
+                banana = itens['banana']
+                energia -=10
+                print(f'\nVocê encontrou uma banana, parabens!')
+                if len (mochila) < TAMANHO_MOCHILA:
                     mochila.append('banana')
-                 else:
-                     print("sua mochila está cheia!!")
-         else:
+                else:
+                    print("sua mochila está cheia!!")
+        else:
              criar_pausa()
-             print("escolha invalida")
+             print("escolha inválida!")
              return
+        
+    else:
+        print('\nVocê procurou por comida mas não encontrou nada')
+        criar_pausa()
+        print('\nA floresta parece cada vez mais assustadora')
+        return
+
 def usar_item():
     global vida, energia, mochila
     if not mochila:
@@ -286,7 +293,7 @@ def usar_item():
                 print(f"\nVocê usou {item}. Vida atual: {vida}, Energia atual: {energia}")
                 return True
             else:
-                print(f"\n{item} não pode ser usado diretamente.")
+                print(f"\nVocê olha para o(a) {item}, isto vai ser útil")
                 mochila.append(item)
                 return False
         else:
