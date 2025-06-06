@@ -10,7 +10,7 @@ TAMANHO_MOCHILA = 6
 vida = VIDA_MAXIMA
 energia = ENERGIA_MAXIMA
 pontuacao = 0
-mochila = []
+mochila = ['facão']
 abrigo = 0
 
 itens = {
@@ -99,6 +99,7 @@ def combate():
         
         elif opcao == 2:
             usar_item()
+            return
 
         elif opcao == 3:
             chance = random.randint(1,3)
@@ -187,7 +188,7 @@ def buscar_comida():
          print(f'\n(1) Pegar escondido e fugir')
          print(f'(2) ataque surpresa no(a) {animal_aleatorio} e pegar mais de um item')
          print('(3) continuar explorando')
-         escolha= int(input("Qual será sua escolha?"))
+         escolha= int(input("Qual será sua escolha? "))
          
          if escolha == 1:
             criar_pausa()
@@ -211,15 +212,16 @@ def buscar_comida():
                 vida_animal -= dano
                 print(f'\nVocê atacou com o facão e causou {dano} de dano ao {animal_aleatorio}.')
                 print('Qual será sua próxima ação?')
+                mostrar_atributos()
                 print("Escolha sua ação:")
                 print('(1) Atacar com facão')
                 print('(2) Usar item da mochila')
                 print('(3) Fugir')
                 opcao = int(input('Digite o número da ação desejada: '))
-
                 if opcao == 1:
                     vida_animal -= itens['facão']['dano']
                     print(f'\nVocê atacou o {animal_aleatorio} e agora a vida dele está em {vida_animal}')
+                    
                     if vida_animal <= 0:
                         print(f'\nVocê derrotou o {animal_aleatorio} e pegou 2 {comidas}!')
                     for i in range(2):
@@ -230,10 +232,9 @@ def buscar_comida():
                     else:
                         criar_pausa()
                         print(f"\nO {animal_aleatorio} atacou você e tirou mais {dano} pontos de vida!!")
-                
                 elif opcao == 2:
                     usar_item()
-
+                    return
                 elif opcao == 3:
                     chance = random.randint(1,3)
                     if chance == 1:
@@ -298,7 +299,7 @@ def usar_item():
 nome = enviar_introducao()
 
 while True:
-    mostrar_atributos(vida, energia, pontuacao, mochila)
+    mostrar_atributos()
     if vida <= 0:
         print(f"\n{nome}, você morreu na floresta... ☠️")
         print("GAME OVER")
@@ -316,7 +317,7 @@ while True:
         elif acao == '2':
             montar_abrigo()
         elif acao == '3':
-            explorar(vida)
+            explorar()
             
         elif acao == '4':
             usar_item()
