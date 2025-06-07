@@ -60,6 +60,7 @@ Boa Sorte {nome}!
 
 def combate():
     global vida
+    global pontuacao
     animal = random.choice(list(animais.keys()))
     dano = itens['facão']['dano']
     dano_do_animal = animais[animal]['dano']
@@ -82,7 +83,8 @@ def combate():
             if vida_animal <= 0:
                 print(f"\nParabéns {nome}, você derrotou o(a) {animal}!!")
                 criar_pausa()
-                print(f'\nVocê ganhou -- ') #criar funcionamento de pontos 
+                pontuacao += 35
+                print(f'\nVocê ganhou 35 pontos ') 
             else:
                 criar_pausa()
                 print(f"\nVocê atacou o(a) {animal} e causou {dano} pontos de dano!")
@@ -124,12 +126,13 @@ def mostrar_atributos():
     return print(f"\nVida: {vida} | Energia: {energia} | Pontuação: {pontuacao} | Mochila: {mochila}")
 
 def explorar():
+    global pontuacao
     print('\nVocê decide explorar a floresta e procurar por alguém')
     criar_pausa()
-    print('\nDepois de andar por um tempo, você finalmente encontra algo. Existem rastros indo para uma caverna, você se aproxima e\n',)
+    pontuacao += 10
+    print('\nDepois de andar por um tempo, você finalmente encontra algo. Existem rastros indo para uma caverna, você se aproxima e entra na cavera. Parabéns! Você ganho mais 10 pontos por descobrir um lugar novo!\n',)
     criar_pausa()   
     combate()
-    # mostrar_atributos()
     
 def montar_abrigo():
     global abrigo
@@ -312,21 +315,51 @@ while True:
         print("GAME OVER")
         break
     else:
-        print("Escolha sua ação:")
-        print("(1) Buscar comida")
-        print("(2) Montar abrigo")
-        print("(3) Explorar a floresta")
-        print("(4) Usar item da mochila")
-        acao = input("Digite o número da ação desejada: ")
+        if pontuacao < 100:
+            print("Escolha sua ação:")
+            print("(1) Buscar comida")
+            print("(2) Montar abrigo")
+            print("(3) Explorar a floresta")
+            print("(4) Usar item da mochila")
+            acao = input("Digite o número da ação desejada: ")
 
-        if acao == '1':
-            buscar_comida()
-        elif acao == '2':
-            montar_abrigo()
-        elif acao == '3':
-            explorar()
+            if acao == '1':
+                buscar_comida()
+            elif acao == '2':
+                montar_abrigo()
+            elif acao == '3':
+                explorar()
+                
+            elif acao == '4':
+                usar_item()
+            else:
+                print("Ação inválida.")
+        elif pontuacao >= 100: # Quando atinge 100 pontos, libera nova ação para o final do jogo
+
+
+
+
+
             
-        elif acao == '4':
-            usar_item()
-        else:
-            print("Ação inválida.")
+            # print(f'Você atingiu {pontuacao} pontos e agora mais uma ação foi liberada!')
+            # criar_pausa()
+            # print("Escolha sua ação:")
+            # print("(1) Buscar comida")
+            # print("(2) Montar abrigo")
+            # print("(3) Explorar a floresta")
+            # print("(4) Usar item da mochila")
+            # print('(5) TESTE ')
+            # acao = input("Digite o número da ação desejada: ")
+
+            # if acao == '1':
+            #     buscar_comida()
+            # elif acao == '2':
+            #     montar_abrigo()
+            # elif acao == '3':
+            #     explorar()
+                
+            # elif acao == '4':
+            #     usar_item()
+            # else:
+            #     print("Ação inválida.")
+
