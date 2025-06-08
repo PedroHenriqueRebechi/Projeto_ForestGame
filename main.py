@@ -305,7 +305,19 @@ def usar_item():
     except ValueError:
         print("\nEntrada inválida. Use um número.")
         return False
-                          
+
+def encontrar_escoteiros():
+    print('Você decide ir atrás da fumaça, com medo mas também esperança.')
+    criar_pausa()
+    print('Você encontra um acampamento! A fumaça estava vindo de uma fogueira, rapidamente você fica eufórico mas')
+    criar_pausa()
+    print('Não tem ninguém aqui, isso é estranho. Por que deixariam tudo para trás?')
+
+    print('Escolha sua ação:')
+    print('(1) Sentar perto da fogueira e esperar pelos escoteiros')
+    print('(2) Roubar seus itens')
+    acao = int(input('Digite o número da ação desejada: '))
+
 nome = enviar_introducao()
 
 while True:
@@ -335,12 +347,36 @@ while True:
             else:
                 print("Ação inválida.")
         elif pontuacao >= 100: # Quando atinge 100 pontos, libera nova ação para o final do jogo
+            criar_pausa()
+            print('Você viu isso? Uma fumaça está subindo, algo está por perto...')
+            criar_pausa()
+    
+            print("Escolha sua ação:")
+            print("(1) Buscar comida")
+            print("(2) Montar abrigo")
+            print("(3) Explorar a floresta")
+            print("(4) Usar item da mochila")
+            print('(5) Ir atrás da fumaça')
+            acao = input("Digite o número da ação desejada: ")
+
+            if acao == '1':
+                buscar_comida()
+            elif acao == '2':
+                montar_abrigo()
+            elif acao == '3':
+                explorar()
+            elif acao == '4':
+                usar_item()
+            elif acao == '5':
+                encontrar_escoteiros()
+            else:
+                print("Ação inválida.")
 
 
 
 
 
-            
+
             # print(f'Você atingiu {pontuacao} pontos e agora mais uma ação foi liberada!')
             # criar_pausa()
             # print("Escolha sua ação:")
