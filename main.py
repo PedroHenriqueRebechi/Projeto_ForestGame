@@ -174,96 +174,113 @@ def buscar_comida():
     global vida, energia, mochila
     print('\nVocê decide sair em busca de comida')
     criar_pausa()
-    comidas= random.choice(list(itens.keys()))
-    encontrou_animal= random.choice([True,False])
-    tipo_item= itens[comidas].get ('tipo')
+    while True:
+        item = random.choice(list(itens.keys()))
+        if itens[item].get('tipo') in ('comida', 'bebida'):
+            break
 
-    while tipo_item not in ['comida', 'bebida']:
-         comidas= random.choice(list(itens.keys()))
-         tipo_item= itens[comidas].get ('tipo')
+    encontrou_animal = random.choice([True, False])
 
     if encontrou_animal:
-         animal_aleatorio= random.choice(list(animais.keys()))
-         print(f'\nVocê avista um(a) {animal_aleatorio} e ele está com um monte de {comidas}')
-         print(f'\n(1) Pegar escondido e fugir')
-         print(f'(2) ataque surpresa no(a) {animal_aleatorio} e pegar mais de um item')
-         print('(3) continuar explorando')
-         escolha= int(input("Qual será sua escolha? "))
-         
-         if escolha == 1:
+        animal = random.choice(list(animais.keys()))
+        print(f'\nVocê avista um(a) {animal} e ele está com um monte de {item}')
+        print('\n(1) Pegar escondido e fugir')
+        print('(2) Ataque surpresa')
+        print('(3) Continuar explorando')
+        try:
+            escolha = int(input("Qual será sua escolha? "))
+        except ValueError:
+            print("Escolha inválida!")
+            return
+
+        if escolha == 1:
             criar_pausa()
-            chance = random.randint(1, 4)
-            if chance == 1:
-                dano = animais[animal_aleatorio]['dano']
+            if random.randint(1, 4) == 1:
+                dano = animais[animal]['dano']
                 vida -= dano
-                print(f'\nO(a) {animal_aleatorio} te viu! Você foi atacado e perdeu {dano} de vida.') 
-                print(f'\nVocê teve que fugir, mais sorte na próxima, o(a) {animal_aleatorio} não é brincadeira!!')
+                print(f'\nO {animal} te viu! Você perdeu {dano} de vida.')
             else:
                 if len(mochila) < TAMANHO_MOCHILA:
-                    mochila.append(comidas)
-                    print(f'\nVocê conseguiu pegar o(a) {comidas} e fugir sem ser visto!')
+                    mochila.append(item)
+                    print(f'\nVocê pegou {item} e fugiu!')
                 else:
-                    print('\nVocê conseguiu pegar, mas a mochila está cheia e teve que deixar o item para trás.')
-         elif escolha == 2:
+                    print('\nMochila cheia; teve que deixar o item.')
+            return
+        elif escolha == 2:
             criar_pausa()
-            if 'facão' in mochila:
-                vida_animal = animais[animal_aleatorio]['vida']
-                dano = itens['facão']['dano']
-                vida_animal -= dano
-                print(f'\nVocê atacou com o facão e causou {dano} de dano ao {animal_aleatorio}.')
-                print('Qual será sua próxima ação?')
-                mostrar_atributos()
-                print("Escolha sua ação:")
-                print('(1) Atacar com facão')
-                print('(2) Usar item da mochila')
-                print('(3) Fugir')
-                opcao = int(input('Digite o número da ação desejada: '))
-                if opcao == 1:
-                    vida_animal -= itens['facão']['dano']
-                    print(f'\nVocê atacou o {animal_aleatorio} e agora a vida dele está em {vida_animal}')
-                    
-                    if vida_animal <= 0:
-                        print(f'\nVocê derrotou o {animal_aleatorio} e pegou 2 {comidas}!')
-                    for i in range(2):
+            if 'facão' not in mochila:
+                print('\nVocê não tem um facão! Impossível atacar.')
+                return
+
+            vida_animal = animais[animal]['vida']
+            dano_fac = itens['facão']['dano']
+            while vida_animal > 0 and vida > 0:
+                vida_animal -= dano_fac
+                print(f'\nVocê acerta com facão! Vida do {animal}: {vida_animal}')
+
+                if vida_animal <= 0:
+                    print(f'\nVocê derrotou o {animal} e pegou 2x {item}!')
+                    for _ in range(2):
                         if len(mochila) < TAMANHO_MOCHILA:
-                            mochila.append(comidas)
+                            mochila.append(item)
                         else:
-                            print("Mochila cheia. Não foi possível pegar mais.")
-                    else:
-                        criar_pausa()
-                        print(f"\nO {animal_aleatorio} atacou você e tirou mais {dano} pontos de vida!!")
+                            print("Mochila cheia, não pegou mais.")
+                    break  
+                dano_animal = animais[animal]['dano']
+                vida -= dano_animal
+                print(f'\nO {animal} contra-ataca e tira {dano_animal} de vida. Sua vida: {vida}')
+
+                if vida <= 0:
+                    print('\nVocê foi derrotado!')
+                    break  
+                criar_pausa()
+                mostrar_atributos()
+                print('(1) Atacar com facão\n(2) Usar item\n(3) Fugir')
+                try:
+                    opcao = int(input('Sua ação: '))
+                except ValueError:
+                    print("Escolha inválida!")
+                    break
+
+                if opcao == 1:
+                    continue  
                 elif opcao == 2:
                     usar_item()
-                    return
+                    break
                 elif opcao == 3:
-                    chance = random.randint(1,3)
-                    if chance == 1:
-                        print(f'\nVocê tentou fugir, mas o {animal_aleatorio} te atacou e tirou {dano} pontos de vida')
-                    elif chance == 2:
-                        print(f'\nEssa foi por pouco!! o {animal_aleatorio} errou o ataque, mas você não conseguiu fugir')
+                    if random.randint(1, 3) == 3:
+                        print('\nVocê escapou!')
                     else:
-                        print('\nVocê escapou dos ataques e conseguiu fugir!!')
+                        vida -= dano_animal
+                        print(f'\nFalhou em fugir. O {animal} te atingiu de novo e tira {dano_animal} de vida.')
+                    break
                 else:
-                    print("opção invalida, tente novamente")
-                    return
-         if escolha == 3: 
-             criar_pausa()
-             chance = random.randint(1,4)
-             if chance == 4:
-                 energia -= 10
-                 print (f'\nVocê não encontrou nada e ainda perdeu 10 de energia, agora sua energia é {energia}')
-             else:
-                 banana = itens['banana']
-                 energia -=10
-                 print(f'\nVocê encontrou uma banana, parabens!')
-                 if len (mochila) < TAMANHO_MOCHILA:
+                    print("Opção inválida.")
+                    break
+            return
+        elif escolha == 3:
+            criar_pausa()
+            if random.randint(1, 4) == 4:
+                energia -= 10
+                print(f'\nVocê não achou nada e perdeu 10 de energia (energia: {energia}).')
+            else:
+                energia -= 10
+                print('\nVocê encontrou uma banana!')
+                if len(mochila) < TAMANHO_MOCHILA:
                     mochila.append('banana')
-                 else:
-                     print("sua mochila está cheia!!")
-         else:
-             criar_pausa()
-             print("escolha invalida")
-             return
+                else:
+                    print("Mochila cheia!")
+            return
+
+        else:
+            print("Escolha inválida.")
+            return
+
+    criar_pausa()
+    energia -= 10
+    print(f'\nVocê sai, mas não encontra nada. Energia -10 (agora {energia}).')
+    return
+
 def usar_item():
     global vida, energia, mochila
     if not mochila:
