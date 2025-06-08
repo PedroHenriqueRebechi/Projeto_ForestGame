@@ -187,8 +187,9 @@ def buscar_comida():
 
     if encontrou_animal:
         animal_aleatorio = random.choice(list(animais.keys()))
-        print(f'\nVocê avista um(a) {animal_aleatorio} e atrás dele(a) estão um monte de {comidas}s')
-        print(f'\n(1) Pegar escondido e fugir')
+        print(f'\nVocê avista um(a) {animal_aleatorio} e, atrás dele(a), há um monte de {comidas}s\n')
+        print('Escolha sua ação:')
+        print(f'(1) Pegar escondido e fugir')
         print(f'(2) Atacar o(a) {animal_aleatorio} e tentar pegar mais de um(a) {comidas}')
         print('(3) continuar explorando')
         escolha = int(input("Qual será sua escolha? "))
@@ -307,6 +308,7 @@ def usar_item():
         return False
 
 def encontrar_escoteiros():
+    global mochila
     print('Você decide ir atrás da fumaça, com medo mas também esperança.')
     criar_pausa()
     print('Você encontra um acampamento! A fumaça estava vindo de uma fogueira, rapidamente você fica eufórico mas')
@@ -315,8 +317,20 @@ def encontrar_escoteiros():
 
     print('Escolha sua ação:')
     print('(1) Sentar perto da fogueira e esperar pelos escoteiros')
-    print('(2) Roubar seus itens')
+    print('(2) Roubar os suprimentos e itens')
     acao = int(input('Digite o número da ação desejada: '))
+
+    if acao == 1:
+        print('Você decide esperar')
+        criar_pausa_maior()
+        print('Você esperou por horas e ninguém apareceu. Realmente algo estranho está acontecendo')
+    
+    if acao == 2:
+        print('Você se sente mal mas pensa que isso é a unica opcão para a sobrevivência')
+        criar_pausa()
+        print('Seu coração está acelerado e entrando na cabana você encontra um mapa! ')
+        mochila.append('mapa')
+
 
 nome = enviar_introducao()
 
