@@ -101,7 +101,7 @@ def combate():
         
         elif opcao == 2:
             usar_item()
-            return
+            #return
 
         elif opcao == 3:
             chance = random.randint(1,3)
@@ -130,8 +130,9 @@ def explorar():
     print('\nVocê decide explorar a floresta e procurar por alguém')
     criar_pausa()
     pontuacao += 10
-    print('\nDepois de andar por um tempo, você finalmente encontra algo. Existem rastros indo para uma caverna, você se aproxima e entra na cavera. Parabéns! Você ganho mais 10 pontos por descobrir um lugar novo!\n',)
+    print('\nDepois de andar por um tempo, você finalmente encontra algo. Existem rastros indo para uma caverna, você se aproxima e entra nela. Parabéns! Você ganho mais 10 pontos por descobrir um lugar novo!\n',)
     criar_pausa()   
+    print('\nMas...')
     combate()
     
 def montar_abrigo():
@@ -235,16 +236,16 @@ def buscar_comida():
                             print("Mochila cheia. Não foi possível pegar mais.")
                     else:
                         criar_pausa()
-                        print(f"\nO {animal_aleatorio} atacou você e tirou mais {dano} pontos de vida!!")
+                        print(f"\nO(a) {animal_aleatorio} atacou você e tirou mais {dano} pontos de vida!!")
                 elif opcao == 2:
                     usar_item()
                     return
                 elif opcao == 3:
                     chance = random.randint(1,3)
                     if chance == 1:
-                        print(f'\nVocê tentou fugir, mas o {animal_aleatorio} te atacou e tirou {dano} pontos de vida')
+                        print(f'\nVocê tentou fugir, mas o(a) {animal_aleatorio} te atacou e tirou {dano} pontos de vida')
                     elif chance == 2:
-                        print(f'\nEssa foi por pouco!! o {animal_aleatorio} errou o ataque, mas você não conseguiu fugir')
+                        print(f'\nEssa foi por pouco! o(a) {animal_aleatorio} errou o ataque, mas você não conseguiu fugir')
                     else:
                         print('\nVocê escapou dos ataques e conseguiu fugir!!')
                 else:
@@ -299,13 +300,14 @@ def usar_item():
             else:
                 print(f"\nVocê olha para o(a) {item}, isto vai ser útil")
                 mochila.append(item)
-                return False
+                #return False
+                return
         else:
             print("\nEscolha inválida.")
             return False
     except ValueError:
         print("\nEntrada inválida. Use um número.")
-        return False
+        return False 
 
 def encontrar_escoteiros():
     global mochila
@@ -330,7 +332,6 @@ def encontrar_escoteiros():
         criar_pausa()
         print('Seu coração está acelerado e entrando na cabana você encontra um mapa! ')
         mochila.append('mapa')
-
 
 nome = enviar_introducao()
 
