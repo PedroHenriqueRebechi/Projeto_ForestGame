@@ -10,20 +10,22 @@ TAMANHO_MOCHILA = 6
 vida = VIDA_MAXIMA
 energia = ENERGIA_MAXIMA
 pontuacao = 0
-mochila = ['facão']
+mochila = ['facão', 'banana']
 abrigo = 0
 
 itens = {
     'biscoito': {'tipo':'comida','regeneração': 25, 'energia': 30},
     'energético': {'tipo':'bebida','regeneração': 15, 'energia': 50},
     'facão': {'tipo':'arma','dano': 35},
-    'banana': {'tipo':'comida','regeneração': 20, 'energia': 30}
+    'banana': {'tipo':'comida','regeneração': 20, 'energia': 30},
+    'maçã': {'tipo':'comida','regeneração': 20, 'energia': 30},
 }
 
 animais = {
     'lobo': {'dano': 10, 'vida': 90},
     'cobra': {'dano': 5, 'vida': 50},
-    'urso': {'dano': 15, 'vida': 130}
+    'urso': {'dano': 15, 'vida': 130},
+    'javali': {'dano': 10, 'vida': 100}
 }
 
 durabilidade_abrigo = {
