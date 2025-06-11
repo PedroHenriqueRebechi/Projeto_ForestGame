@@ -81,26 +81,21 @@ def combate():
         opcao = int(input('Digite o número da ação desejada: '))
 
         if opcao == 1:
-
-            if vida_animal <= 0:
-                print(f"\nParabéns {nome}, você derrotou o(a) {animal}!!")
-                criar_pausa()
-                pontuacao += 35
-                print(f'\nVocê ganhou 35 pontos ') 
-            else:
-                criar_pausa()
-                print(f"\nVocê atacou o(a) {animal} e causou {dano} pontos de dano!")
-                vida_animal -= itens['facão']['dano']
-                print(f'\nAgora a vida do(a) {animal} está em {vida_animal}')
-
+            criar_pausa()
             chance_de_ataque_animal = random.choice([True,False])
             if chance_de_ataque_animal:
                 print(f'\nVocê é atacado pelo(a) {animal} novamente e perde {dano_do_animal} pontos de vida!')
                 vida -= dano_do_animal
                 mostrar_atributos()
             else:
-                print(f'Você desviou do ataque do(a) {animal}!\n')
-        
+                print(f'\nVocê desviou do ataque do(a) {animal}!\n')
+            criar_pausa()
+            print(f"\nVocê atacou o(a) {animal} e causou {dano} pontos de dano!")
+            vida_animal -= itens['facão']['dano']
+            print(f'Agora a vida do(a) {animal} está em {vida_animal}')
+
+            
+            
         elif opcao == 2:
             usar_item()
             #return
@@ -118,6 +113,14 @@ def combate():
         else:
             print("opção invalida, tente novamente")
             return
+        
+    print(f"\nParabéns {nome}, você derrotou o(a) {animal}!!")
+    criar_pausa()
+    pontuacao += 35
+    print(f'\nVocê ganhou 35 pontos ') 
+    return
+
+        
 
 def mostrar_atributos():
     global vida
@@ -295,10 +298,13 @@ def usar_item():
             dados_item = itens.get(item, {})
 
             if dados_item.get('tipo') in ['comida', 'bebida']:
-                vida = min(VIDA_MAXIMA, vida + dados_item.get('regeneração', 0))
-                energia = min(ENERGIA_MAXIMA, energia + dados_item.get('energia', 0))
-                print(f"\nVocê usou {item}. Vida atual: {vida}, Energia atual: {energia}")
-                return True
+                if vida != VIDA_MAXIMA or energia != ENERGIA_MAXIMA:
+                    vida = min(VIDA_MAXIMA, vida + dados_item.get('regeneração', 0))
+                    energia = min(ENERGIA_MAXIMA, energia + dados_item.get('energia', 0))
+                    print(f"\nVocê usou {item}. Vida atual: {vida}, Energia atual: {energia}")
+                    return True
+                elif vida == VIDA_MAXIMA and energia == ENERGIA_MAXIMA:
+                    print('\nSua vida e energia estão cheias')
             else:
                 print(f"\nVocê olha para o(a) {item}, isto vai ser útil")
                 mochila.append(item)
