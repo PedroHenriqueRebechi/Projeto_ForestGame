@@ -12,6 +12,7 @@ energia = ENERGIA_MAXIMA
 pontuacao = 0
 mochila = ['facão', 'banana']
 abrigo = 0
+abrigo_montado= False
 
 itens = {
     'biscoito': {'tipo':'comida','regeneração': 25, 'energia': 30},
@@ -63,6 +64,7 @@ Boa Sorte {nome}!
 def combate():
     global vida
     global pontuacao
+    global energia
     animal = random.choice(list(animais.keys()))
     dano = itens['facão']['dano']
     dano_do_animal = animais[animal]['dano']
@@ -90,7 +92,8 @@ def combate():
             else:
                 print(f'\nVocê desviou do ataque do(a) {animal}!\n')
             criar_pausa()
-            print(f"\nVocê atacou o(a) {animal} e causou {dano} pontos de dano!")
+            print(f"\nVocê atacou o(a) {animal} e causou {dano} pontos de dano!\nVocê gastou 10 de energia")
+            energia -= 10
             vida_animal -= itens['facão']['dano']
             print(f'Agora a vida do(a) {animal} está em {vida_animal}')
 
@@ -141,7 +144,7 @@ def explorar():
     combate()
     
 def montar_abrigo():
-    global abrigo
+    global abrigo,energia,abrigo_montado
     nivel_exploracao = 0
 
     while True:
@@ -166,6 +169,9 @@ def montar_abrigo():
             abrigo = durabilidade_abrigo[tipo]['durabilidade']
             print(f'\nVocê construiu um {tipo}.')
             print(f'Durabilidade do abrigo: {abrigo}')
+            print(f'\nVocê usou 10 de energia para construir esse abrigo, agora sua energia é {energia}\n')
+            energia -=10
+            abrigo_montado = True
             break
 
         elif escolha == '2':
@@ -178,6 +184,24 @@ def montar_abrigo():
             criar_pausa()
         else:
             print("Escolha inválida. Tente novamente.")
+ 
+def acessar_abrigo():
+    global energia,abrigo, abrigo_montado
+    if abrigo_montado == True:
+        print("Você escolheu acessar seu abrigo para descansar e recuperar energia") 
+        abrigo -= 10
+        energia += 20
+        print("Você acorda e tem um tempo tranquilo, deseja escrever sobre sua jornada em seu diário?")
+        escolha= input('\n (1) sim\n(2) Não')
+        if escolha== 1:
+            print()
+            #manipulação de arquivos
+        else:
+            print('Você escolhou não usar seu diário')
+        if abrigo == 0:
+            print("\nSeu abrigo está muito velho e desabou, construa um novo para recuperar energias e acessar seu diário\n")
+    else:
+        print("\nVocê não tem um abrigo construido\n")
 
 def buscar_comida():
     global vida, energia, mochila
@@ -231,7 +255,7 @@ def buscar_comida():
                 if opcao == 1:
                     vida_animal -= itens['facão']['dano']
                     print(f'\nVocê atacou o {animal_aleatorio} e agora a vida dele está em {vida_animal}')
-                    
+                    energia -= 10 
                     if vida_animal <= 0:
                         print(f'\nVocê derrotou o {animal_aleatorio} e pegou 2 {comidas}!')
                     for i in range(2):
