@@ -1,3 +1,0 @@
-
-Voce perdeu o jogo ForestGame...
-Vida: -40 | Energia: 100 | Pontuacao: 10 | Mochila: ['banana', 'facao']

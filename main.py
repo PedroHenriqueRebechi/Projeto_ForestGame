@@ -15,6 +15,7 @@ mochila = ['facao', 'banana']
 abrigo = 0
 abrigo_montado= False
 introducao_enviada = False 
+explorar_contagem = 0
 
 itens = {
     'biscoito': {'tipo':'comida','regeneração': 25, 'energia': 30},
@@ -37,6 +38,8 @@ durabilidade_abrigo = {
     'abrigo medio': {'durabilidade': 45},
     'abrigo forte': {'durabilidade': 60}
 }
+
+lugares = ['caverna', 'lago', 'pântano', 'bambuzal', 'rio'] 
 
 def enviar_introducao():
 
@@ -76,63 +79,75 @@ def combate():
     
     mostrar_atributos()
 
-    
-    while vida_animal > 0:
-        print("Escolha sua ação:")
-        print('(1) Atacar com facao')
+    while vida > 0 and vida_animal > 0:
+        print("\nEscolha sua ação:")
+        print('(1) Atacar com facão')
         print('(2) Usar item da mochila')
         print('(3) Fugir')
-        opcao = int(input('Digite o número da ação desejada: '))
+        try:
+            opcao = int(input('Digite o número da ação desejada: '))
+        except ValueError:
+            print("Opção inválida. Digite um número.")
+            continue
 
         if opcao == 1:
             criar_pausa()
-            chance_de_ataque_animal = random.choice([True,False])
-            if chance_de_ataque_animal:
+            if random.choice([True, False]):
                 print(f'\nVocê é atacado pelo(a) {animal} novamente e perde {dano_do_animal} pontos de vida!')
                 vida -= dano_do_animal
+                if vida <= 0:
+                    break
                 mostrar_atributos()
             else:
                 print(f'\nVocê desviou do ataque do(a) {animal}!\n')
+
             criar_pausa()
             print(f"\nVocê atacou o(a) {animal} e causou {dano} pontos de dano!\nVocê gastou 10 de energia")
             energia -= 10
-            vida_animal -= itens['facao']['dano']
+            vida_animal -= dano
             print(f'Agora a vida do(a) {animal} está em {vida_animal}')
 
-            
-            
         elif opcao == 2:
             usar_item()
-            chance_de_ataque_animal = random.choice([True,False])
-            if chance_de_ataque_animal:
+            if random.choice([True, False]):
                 print(f'\nVocê é atacado pelo(a) {animal} novamente e perde {dano_do_animal} pontos de vida!')
                 vida -= dano_do_animal
+                if vida <= 0:
+                    break
                 mostrar_atributos()
             else:
                 print(f'\nVocê desviou do ataque do(a) {animal}!\n')
-            
-            #return
 
         elif opcao == 3:
-            chance = random.randint(1,3)
+            chance = random.randint(1, 3)
             if chance == 1:
                 vida -= dano_do_animal
                 print(f'\nVocê tentou fugir, mas o {animal} te atacou e tirou {dano_do_animal} pontos de vida')
+                if vida <= 0:
+                    break
                 mostrar_atributos()
             elif chance == 2:
-                print(f'\nEssa foi por pouco!! o {animal} errou o ataque, mas você não conseguiu fugir')
+                print(f'\nEssa foi por pouco!! O {animal} errou o ataque, mas você não conseguiu fugir')
             else:
                 print('\nVocê escapou dos ataques e conseguiu fugir!!')
                 return
+
         else:
-            print("opção invalida, tente novamente")
-            return
-        
-    print(f"\nParabéns {nome}, você derrotou o(a) {animal}!!")
-    criar_pausa()
-    pontuacao += 35
-    print(f'\nVocê ganhou 35 pontos ') 
-    return
+            print("Opção inválida, tente novamente")
+            continue
+
+    if vida <= 0:
+        print(f"\n{nome}, você morreu por um(a) {animal}... ☠️")
+        print("GAME OVER")
+        with open('statusFinal.txt', 'a') as arquivo:
+            arquivo.write(f'\nVoce perdeu o jogo ForestGame...\nVida: {vida} | Energia: {energia} | Pontuacao: {pontuacao} | Mochila: {mochila}')
+        exit()
+    else:
+        print(f"\nParabens {nome}, você derrotou o(a) {animal}!!")
+        criar_pausa()
+        pontuacao += 35
+        print(f'\nVocê ganhou 35 pontos ')
+         
 
 def mostrar_atributos():
     global vida
@@ -154,14 +169,20 @@ def encontrar_saida_com_mapa():
     exit()
 
 def explorar():
+    global explorar_contagem
     global pontuacao
-    print('\nVocê decide explorar a floresta e procurar por alguém')
-    criar_pausa()
-    pontuacao += 10
-    print('\nDepois de andar por um tempo, você finalmente encontra algo. Existem rastros indo para uma caverna, você se aproxima e entra nela. Parabéns! Você ganho mais 10 pontos por descobrir um lugar novo!\n',)
-    criar_pausa()   
-    print('\nMas...')
-    combate()
+    if explorar_contagem < len(lugares):
+        print('\nVocê decide explorar a floresta e procurar por alguém')
+        criar_pausa()
+        pontuacao += 10
+        local = lugares[explorar_contagem]
+        print(f'\nDepois de andar por um tempo, você finalmente encontra algo. Você avistou um(a) {local}, você se aproxima e entra nele(a). Parabéns! Você ganho mais 10 pontos por descobrir um lugar novo!\n',)
+        explorar_contagem += 1
+        criar_pausa()   
+        print('\nMas...')
+        combate()
+    else:
+        print('\nVocê já explorou todos os lugares da floresta mas ainda não encontrou a saída...')
     
 def montar_abrigo():
     global abrigo,energia,abrigo_montado
@@ -445,10 +466,10 @@ while True:
             if abrigo_montado == False:
                 if introducao_enviada == False:
                     criar_pausa()
-                    print('\nVocê viu isso? Uma fumaça está subindo, algo está por perto...')
+                    print('\n\nVocê viu isso? Uma fumaça está subindo, algo está por perto...')
                     criar_pausa()
                     
-                    print("\nEscolha sua ação:")
+                    print("\n\nEscolha sua ação:")
                     print("(1) Buscar comida")
                     print("(2) Montar abrigo")
                     print("(3) Explorar a floresta")
