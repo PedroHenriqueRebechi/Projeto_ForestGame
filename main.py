@@ -11,17 +11,17 @@ TAMANHO_MOCHILA = 6
 vida = VIDA_MAXIMA
 energia = ENERGIA_MAXIMA
 pontuacao = 0
-mochila = ['facão', 'banana']
+mochila = ['facao', 'banana']
 abrigo = 0
 abrigo_montado= False
 introducao_enviada = False 
 
 itens = {
     'biscoito': {'tipo':'comida','regeneração': 25, 'energia': 30},
-    'energético': {'tipo':'bebida','regeneração': 15, 'energia': 50},
-    'facão': {'tipo':'arma','dano': 35},
+    'energetico': {'tipo':'bebida','regeneração': 15, 'energia': 50},
+    'facao': {'tipo':'arma','dano': 35},
     'banana': {'tipo':'comida','regeneração': 20, 'energia': 30},
-    'maçã': {'tipo':'comida','regeneração': 20, 'energia': 30},
+    'laranja': {'tipo':'comida','regeneração': 20, 'energia': 30},
     'mapa': {'tipo': 'mapear'},     
 }
 
@@ -34,11 +34,9 @@ animais = {
 
 durabilidade_abrigo = {
     'abrigo fraco': {'durabilidade': 20},
-    'abrigo médio': {'durabilidade': 45},
+    'abrigo medio': {'durabilidade': 45},
     'abrigo forte': {'durabilidade': 60}
 }
-
-
 
 def enviar_introducao():
 
@@ -61,18 +59,27 @@ def combate():
     global pontuacao
     global energia
     animal = random.choice(list(animais.keys()))
-    dano = itens['facão']['dano']
+    dano = itens['facao']['dano']
     dano_do_animal = animais[animal]['dano']
     vida_animal = animais[animal]['vida']
+    
 
     print(f'\nVocê é atacado por um(a) {animal} e perde {dano_do_animal} pontos de vida!')
-
     vida -= dano_do_animal
+
+    if vida <= 0:
+        print(f"\n{nome}, você morreu por um(a) {animal}... ☠️")
+        print("GAME OVER")
+        with open('statusFinal.txt', 'a') as arquivo:
+            arquivo.write(f'\nVoce perdeu o jogo ForestGame...\nVida: {vida} | Energia: {energia} | Pontuacao: {pontuacao} | Mochila: {mochila}')
+        exit()
+    
     mostrar_atributos()
 
+    
     while vida_animal > 0:
         print("Escolha sua ação:")
-        print('(1) Atacar com facão')
+        print('(1) Atacar com facao')
         print('(2) Usar item da mochila')
         print('(3) Fugir')
         opcao = int(input('Digite o número da ação desejada: '))
@@ -89,18 +96,27 @@ def combate():
             criar_pausa()
             print(f"\nVocê atacou o(a) {animal} e causou {dano} pontos de dano!\nVocê gastou 10 de energia")
             energia -= 10
-            vida_animal -= itens['facão']['dano']
+            vida_animal -= itens['facao']['dano']
             print(f'Agora a vida do(a) {animal} está em {vida_animal}')
 
             
             
         elif opcao == 2:
             usar_item()
+            chance_de_ataque_animal = random.choice([True,False])
+            if chance_de_ataque_animal:
+                print(f'\nVocê é atacado pelo(a) {animal} novamente e perde {dano_do_animal} pontos de vida!')
+                vida -= dano_do_animal
+                mostrar_atributos()
+            else:
+                print(f'\nVocê desviou do ataque do(a) {animal}!\n')
+            
             #return
 
         elif opcao == 3:
             chance = random.randint(1,3)
             if chance == 1:
+                vida -= dano_do_animal
                 print(f'\nVocê tentou fugir, mas o {animal} te atacou e tirou {dano_do_animal} pontos de vida')
                 mostrar_atributos()
             elif chance == 2:
@@ -118,12 +134,6 @@ def combate():
     print(f'\nVocê ganhou 35 pontos ') 
     return
 
-def encontrar_saida_com_mapa():
-    global pontuacao
-    print('\nVocê vê no mapa o caminho de saída da floresta e consegue sair dela!')
-    print(f'Parabéns! Você ganhou o jogo com {pontuacao} pontos!')
-    exit()
-
 def mostrar_atributos():
     global vida
     global energia
@@ -131,6 +141,17 @@ def mostrar_atributos():
     global mochila
 
     return print(f"\nVida: {vida} | Energia: {energia} | Pontuação: {pontuacao} | Mochila: {mochila}")
+
+def encontrar_saida_com_mapa():
+    global vida, energia, mochila, pontuacao
+    print('\nVocê vê no mapa o caminho de saída da floresta e consegue sair dela!')
+    print(f'Parabéns! Você ganhou o jogo com {pontuacao} pontos!')
+    
+    # Salvar status final do jogo com pontuacao
+    with open('statusFinal.txt', 'a') as arquivo:
+        arquivo.write(f'\nVoce venceu o jogo ForestGame!\nVida: {vida} | Energia: {energia} | Pontuacao: {pontuacao} | Mochila: {mochila}')
+        
+    exit()
 
 def explorar():
     global pontuacao
@@ -161,7 +182,7 @@ def montar_abrigo():
             if nivel_exploracao == 0:
                 tipo = 'abrigo fraco'
             elif nivel_exploracao == 1:
-                tipo = 'abrigo médio'
+                tipo = 'abrigo medio'
             else:
                 tipo = 'abrigo forte'
 
@@ -239,20 +260,20 @@ def buscar_comida():
                     print('\nVocê conseguiu pegar, mas a mochila está cheia e teve que deixar o item para trás.')
         elif escolha == 2:
             criar_pausa()
-            if 'facão' in mochila:
+            if 'facao' in mochila:
                 vida_animal = animais[animal_aleatorio]['vida']
-                dano = itens['facão']['dano']
+                dano = itens['facao']['dano']
                 vida_animal -= dano
-                print(f'\nVocê atacou com o facão e causou {dano} de dano ao {animal_aleatorio}.')
+                print(f'\nVocê atacou com o facao e causou {dano} de dano ao {animal_aleatorio}.')
                 print('Qual será sua próxima ação?')
                 mostrar_atributos()
                 print("Escolha sua ação:")
-                print('(1) Atacar com facão')
+                print('(1) Atacar com facao')
                 print('(2) Usar item da mochila')
                 print('(3) Fugir')
                 opcao = int(input('Digite o número da ação desejada: '))
                 if opcao == 1:
-                    vida_animal -= itens['facão']['dano']
+                    vida_animal -= itens['facao']['dano']
                     print(f'\nVocê atacou o {animal_aleatorio} e agora a vida dele está em {vida_animal}')
                     energia -= 10 
                     if vida_animal <= 0:
@@ -367,11 +388,6 @@ def encontrar_escoteiros():
         print('\nSeu coração está acelerado e entrando na cabana você encontra um mapa! ')
         mochila.append('mapa')
 
-
-
-
-
-
 nome = enviar_introducao()
 
 while True:
@@ -379,6 +395,8 @@ while True:
     if vida <= 0:
         print(f"\n{nome}, você morreu na floresta... ☠️")
         print("GAME OVER")
+        with open('statusFinal.txt', 'a') as arquivo:
+            arquivo.write(f'\nVoce perdeu o jogo ForestGame...\nVida: {vida} | Energia: {energia} | Pontuacao: {pontuacao} | Mochila: {mochila}')
         break
     else:
         if pontuacao < 100:
