@@ -1,5 +1,6 @@
-import time
+from modulosTimer import criar_pausa, criar_pausa_maior
 import random
+
 
 # Constantes
 VIDA_MAXIMA = 100
@@ -13,6 +14,7 @@ pontuacao = 0
 mochila = ['facão', 'banana']
 abrigo = 0
 abrigo_montado= False
+introducao_enviada = False 
 
 itens = {
     'biscoito': {'tipo':'comida','regeneração': 25, 'energia': 30},
@@ -20,6 +22,7 @@ itens = {
     'facão': {'tipo':'arma','dano': 35},
     'banana': {'tipo':'comida','regeneração': 20, 'energia': 30},
     'maçã': {'tipo':'comida','regeneração': 20, 'energia': 30},
+    'mapa': {'tipo': 'mapear'},     
 }
 
 animais = {
@@ -35,15 +38,7 @@ durabilidade_abrigo = {
     'abrigo forte': {'durabilidade': 60}
 }
 
-def criar_pausa():
-    for i in range(3):
-        print(".", end="")
-        time.sleep(0.5)
 
-def criar_pausa_maior():
-    for i in range(3):
-        print(".", end="")
-        time.sleep(0.10)
 
 def enviar_introducao():
 
@@ -123,7 +118,11 @@ def combate():
     print(f'\nVocê ganhou 35 pontos ') 
     return
 
-        
+def encontrar_saida_com_mapa():
+    global pontuacao
+    print('\nVocê vê no mapa o caminho de saída da floresta e consegue sair dela!')
+    print(f'Parabéns! Você ganhou o jogo com {pontuacao} pontos!')
+    exit()
 
 def mostrar_atributos():
     global vida
@@ -148,7 +147,7 @@ def montar_abrigo():
     nivel_exploracao = 0
 
     while True:
-        print('\nVocê decide montar um abrigo')
+        print('\nVocê pensa que seria bom ter um abrigo')
         criar_pausa()
         print('\nApós um tempo de exploração, você encontra alguns galhos, pedras e folhas.')
         print('Deseja criar um abrigo agora ou continuar explorando para conseguir mais recursos?')
@@ -169,8 +168,8 @@ def montar_abrigo():
             abrigo = durabilidade_abrigo[tipo]['durabilidade']
             print(f'\nVocê construiu um {tipo}.')
             print(f'Durabilidade do abrigo: {abrigo}')
-            print(f'\nVocê usou 10 de energia para construir esse abrigo, agora sua energia é {energia}\n')
             energia -=10
+            print(f'\nVocê usou 10 de energia para construir esse abrigo, agora sua energia é {energia}\n')
             abrigo_montado = True
             break
 
@@ -186,20 +185,20 @@ def montar_abrigo():
             print("Escolha inválida. Tente novamente.")
  
 def acessar_abrigo():
-    global energia,abrigo, abrigo_montado
+    global energia, abrigo, abrigo_montado
     if abrigo_montado == True:
-        print("Você escolheu acessar seu abrigo para descansar e recuperar energia") 
+        print("\nVocê escolheu acessar seu abrigo para descansar e recuperar energia") 
         abrigo -= 10
-        energia += 20
-        print("Você acorda e tem um tempo tranquilo, deseja escrever sobre sua jornada em seu diário?")
-        escolha= input('\n (1) sim\n(2) Não')
-        if escolha== 1:
-            print()
-            #manipulação de arquivos
+        # energia += 20
+        print("Você acorda e tem um tempo tranquilo e ganha 20 de energia")
+        if energia + 20 >= ENERGIA_MAXIMA :
+            energia = ENERGIA_MAXIMA
+        elif energia == ENERGIA_MAXIMA:
+            print('\nSua energia está cheia')
         else:
-            print('Você escolhou não usar seu diário')
+            energia += 20
         if abrigo == 0:
-            print("\nSeu abrigo está muito velho e desabou, construa um novo para recuperar energias e acessar seu diário\n")
+            print("\nSeu abrigo está muito velho e desabou, construa um novo para recuperar energia\n")
     else:
         print("\nVocê não tem um abrigo construido\n")
 
@@ -329,6 +328,9 @@ def usar_item():
                     return True
                 elif vida == VIDA_MAXIMA and energia == ENERGIA_MAXIMA:
                     print('\nSua vida e energia estão cheias')
+            elif dados_item.get('tipo') in ['mapear']:
+                encontrar_saida_com_mapa()
+
             else:
                 print(f"\nVocê olha para o(a) {item}, isto vai ser útil")
                 mochila.append(item)
@@ -343,11 +345,11 @@ def usar_item():
 
 def encontrar_escoteiros():
     global mochila
-    print('Você decide ir atrás da fumaça, com medo mas também esperança.')
+    print('\nVocê decide ir atrás da fumaça, com medo mas também esperança.')
     criar_pausa()
-    print('Você encontra um acampamento! A fumaça estava vindo de uma fogueira, rapidamente você fica eufórico mas')
+    print('\nVocê encontra um acampamento! A fumaça estava vindo de uma fogueira, rapidamente você fica eufórico mas')
     criar_pausa()
-    print('Não tem ninguém aqui, isso é estranho. Por que deixariam tudo para trás?')
+    print('\nNão tem ninguém aqui, isso é estranho. Por que deixariam tudo para trás?')
 
     print('Escolha sua ação:')
     print('(1) Sentar perto da fogueira e esperar pelos escoteiros')
@@ -355,15 +357,20 @@ def encontrar_escoteiros():
     acao = int(input('Digite o número da ação desejada: '))
 
     if acao == 1:
-        print('Você decide esperar')
+        print('\nVocê decide esperar')
         criar_pausa_maior()
-        print('Você esperou por horas e ninguém apareceu. Realmente algo estranho está acontecendo')
+        print('\nVocê esperou por horas e ninguém apareceu. Realmente algo estranho está acontecendo')
     
     if acao == 2:
-        print('Você se sente mal mas pensa que isso é a unica opcão para a sobrevivência')
+        print('\nMesmo se sentindo mal, você pensa que isso é a unica opcão para a sobrevivência')
         criar_pausa()
-        print('Seu coração está acelerado e entrando na cabana você encontra um mapa! ')
+        print('\nSeu coração está acelerado e entrando na cabana você encontra um mapa! ')
         mochila.append('mapa')
+
+
+
+
+
 
 nome = enviar_introducao()
 
@@ -375,49 +382,150 @@ while True:
         break
     else:
         if pontuacao < 100:
-            print("Escolha sua ação:")
-            print("(1) Buscar comida")
-            print("(2) Montar abrigo")
-            print("(3) Explorar a floresta")
-            print("(4) Usar item da mochila")
-            acao = input("Digite o número da ação desejada: ")
+            if abrigo_montado == False:
+                print("Escolha sua ação:")
+                print("(1) Buscar comida")
+                print("(2) Montar abrigo")
+                print("(3) Explorar a floresta")
+                print("(4) Usar item da mochila")
+                acao = input("Digite o número da ação desejada: ")
 
-            if acao == '1':
-                buscar_comida()
-            elif acao == '2':
-                montar_abrigo()
-            elif acao == '3':
-                explorar()
-                
-            elif acao == '4':
-                usar_item()
-            else:
-                print("Ação inválida.")
+                if acao == '1':
+                    buscar_comida()
+                elif acao == '2':
+                    montar_abrigo()
+                elif acao == '3':
+                    explorar()
+                    
+                elif acao == '4':
+                    usar_item()
+                else:
+                    print("Ação inválida.")
+            elif abrigo_montado == True:
+                print("Escolha sua ação:")
+                print("(1) Buscar comida")
+                print("(2) Acessar abrigo")
+                print("(3) Explorar a floresta")
+                print("(4) Usar item da mochila")
+                acao = input("Digite o número da ação desejada: ")
+
+                if acao == '1':
+                    buscar_comida()
+                elif acao == '2':
+                    acessar_abrigo()
+                elif acao == '3':
+                    explorar()
+                    
+                elif acao == '4':
+                    usar_item()
+                else:
+                    print("Ação inválida.")
         elif pontuacao >= 100: # Quando atinge 100 pontos, libera nova ação para o final do jogo
-            criar_pausa()
-            print('Você viu isso? Uma fumaça está subindo, algo está por perto...')
-            criar_pausa()
-    
-            print("Escolha sua ação:")
-            print("(1) Buscar comida")
-            print("(2) Montar abrigo")
-            print("(3) Explorar a floresta")
-            print("(4) Usar item da mochila")
-            print('(5) Ir atrás da fumaça')
-            acao = input("Digite o número da ação desejada: ")
+            
+            # introducao_enviada = False 
+            
+            if abrigo_montado == False:
+                if introducao_enviada == False:
+                    criar_pausa()
+                    print('\nVocê viu isso? Uma fumaça está subindo, algo está por perto...')
+                    criar_pausa()
+                    
+                    print("\nEscolha sua ação:")
+                    print("(1) Buscar comida")
+                    print("(2) Montar abrigo")
+                    print("(3) Explorar a floresta")
+                    print("(4) Usar item da mochila")
+                    print('(5) Ir atrás da fumaça')
+                    acao = input("Digite o número da ação desejada: ")
+                    
 
-            if acao == '1':
-                buscar_comida()
-            elif acao == '2':
-                montar_abrigo()
-            elif acao == '3':
-                explorar()
-            elif acao == '4':
-                usar_item()
-            elif acao == '5':
-                encontrar_escoteiros()
-            else:
-                print("Ação inválida.")
+                    if acao == '1':
+                        buscar_comida()
+                    elif acao == '2':
+                        montar_abrigo()
+                    elif acao == '3':
+                        explorar()
+                    elif acao == '4':
+                        usar_item()
+                    elif acao == '5':
+                        encontrar_escoteiros()
+                    else:
+                        print("Ação inválida.")
+                    introducao_enviada = True
+                else:
+                    print("\nEscolha sua ação:")
+                    print("(1) Buscar comida")
+                    print("(2) Montar abrigo")
+                    print("(3) Explorar a floresta")
+                    print("(4) Usar item da mochila")
+                    print('(5) Ir atrás da fumaça')
+                    acao = input("Digite o número da ação desejada: ")
+                    
+
+                    if acao == '1':
+                        buscar_comida()
+                    elif acao == '2':
+                        montar_abrigo()
+                    elif acao == '3':
+                        explorar()
+                    elif acao == '4':
+                        usar_item()
+                    elif acao == '5':
+                        encontrar_escoteiros()
+                    else:
+                        print("Ação inválida.")
+                        
+            elif abrigo_montado == True:
+                if introducao_enviada == False:
+                    criar_pausa()
+                    print('Você viu isso? Uma fumaça está subindo, algo está por perto...')
+                    criar_pausa()
+                    print("Escolha sua ação:")
+                    print("(1) Buscar comida")
+                    print("(2) Acessar abrigo")
+                    print("(3) Explorar a floresta")
+                    print("(4) Usar item da mochila")
+                    print('(5) Ir atrás da fumaça')
+                    acao = input("Digite o número da ação desejada: ")
+                    
+
+                    if acao == '1':
+                        buscar_comida()
+                    elif acao == '2':
+                        acessar_abrigo()
+                    elif acao == '3':
+                        explorar()
+                    elif acao == '4':
+                        usar_item()
+                    elif acao == '5':
+                        encontrar_escoteiros()
+                    else:
+                        print("Ação inválida.")
+                    introducao_enviada = True
+                else:
+                    print("Escolha sua ação:")
+                    print("(1) Buscar comida")
+                    print("(2) Acessar abrigo")
+                    print("(3) Explorar a floresta")
+                    print("(4) Usar item da mochila")
+                    print('(5) Ir atrás da fumaça')
+                    acao = input("Digite o número da ação desejada: ")
+                    
+
+                    if acao == '1':
+                        buscar_comida()
+                    elif acao == '2':
+                        acessar_abrigo()
+                    elif acao == '3':
+                        explorar()
+                    elif acao == '4':
+                        usar_item()
+                    elif acao == '5':
+                        encontrar_escoteiros()
+                    else:
+                        print("Ação inválida.")
+        
+                
 
 
 
