@@ -148,7 +148,6 @@ def combate():
         pontuacao += 35
         print(f'\nVocê ganhou 35 pontos ')
          
-
 def mostrar_atributos():
     global vida
     global energia
@@ -257,6 +256,7 @@ def buscar_comida():
          tipo_item = itens[comidas].get ('tipo')
 
     if encontrou_animal:
+        
         animal_aleatorio = random.choice(list(animais.keys()))
         print(f'\nVocê avista um(a) {animal_aleatorio} e, atrás dele(a), há um monte de {comidas}s\n')
         print('Escolha sua ação:')
@@ -269,9 +269,15 @@ def buscar_comida():
             criar_pausa()
             chance = random.randint(1, 4)
             if chance == 1:
-                dano = animais[animal_aleatorio]['dano']
+                dano_animal = animais[animal_aleatorio]['dano']
                 vida -= dano
-                print(f'\nO(a) {animal_aleatorio} te viu! Você foi atacado e perdeu {dano} de vida.') 
+                print(f'\nO(a) {animal_aleatorio} te viu! Você foi atacado e perdeu {dano_animal} de vida.') 
+                if vida <= 0:
+                    print(f"\n{nome}, você morreu por um(a) {animal_aleatorio}... ☠️")
+                    print("GAME OVER")
+                    with open('statusFinal.txt', 'a') as arquivo:
+                        arquivo.write(f'\nVoce perdeu o jogo ForestGame...\nVida: {vida} | Energia: {energia} | Pontuacao: {pontuacao} | Mochila: {mochila}')
+                    exit()
                 print(f'Você teve que fugir, mais sorte na próxima, o(a) {animal_aleatorio} não é brincadeira!!')
             else:
                 if len(mochila) < TAMANHO_MOCHILA:
@@ -283,37 +289,56 @@ def buscar_comida():
             criar_pausa()
             if 'facao' in mochila:
                 vida_animal = animais[animal_aleatorio]['vida']
+                dano_animal = animais[animal_aleatorio]['dano']
                 dano = itens['facao']['dano']
                 vida_animal -= dano
-                print(f'\nVocê atacou com o facao e causou {dano} de dano ao {animal_aleatorio}.')
+                print(f'\nVocê atacou com o facao e causou {dano} de dano ao(à) {animal_aleatorio}.')
                 print('Qual será sua próxima ação?')
                 mostrar_atributos()
+                
                 print("Escolha sua ação:")
                 print('(1) Atacar com facao')
                 print('(2) Usar item da mochila')
                 print('(3) Fugir')
                 opcao = int(input('Digite o número da ação desejada: '))
+                
                 if opcao == 1:
-                    vida_animal -= itens['facao']['dano']
-                    print(f'\nVocê atacou o {animal_aleatorio} e agora a vida dele está em {vida_animal}')
-                    energia -= 10 
+                    while vida > 0 and vida_animal > 0:
+                        vida_animal -= itens['facao']['dano']
+                        print(f'\nVocê atacou o {animal_aleatorio} e agora a vida dele está em {vida_animal}')
+                        energia -= 10 
+                        criar_pausa()
+                        vida -= dano_animal
+                        print(f"\nO(a) {animal_aleatorio} atacou você e tirou mais {dano_animal} pontos de vida!!")
+                    
                     if vida_animal <= 0:
                         print(f'\nVocê derrotou o {animal_aleatorio} e pegou 2 {comidas}!')
-                    for i in range(2):
-                        if len(mochila) < TAMANHO_MOCHILA:
-                            mochila.append(comidas)
-                        else:
-                            print("Mochila cheia. Não foi possível pegar mais.")
-                    else:
-                        criar_pausa()
-                        print(f"\nO(a) {animal_aleatorio} atacou você e tirou mais {dano} pontos de vida!!")
+                        for i in range(2):
+                            if len(mochila) < TAMANHO_MOCHILA:
+                                mochila.append(comidas)
+                            else:
+                                print("Mochila cheia. Não foi possível pegar mais.")
+                    
+                    elif vida <= 0:
+                        print(f"\n{nome}, você morreu por um(a) {animal_aleatorio}... ☠️")
+                        print("GAME OVER")
+                        with open('statusFinal.txt', 'a') as arquivo:
+                            arquivo.write(f'\nVoce perdeu o jogo ForestGame...\nVida: {vida} | Energia: {energia} | Pontuacao: {pontuacao} | Mochila: {mochila}')
+                        exit()
+                    
                 elif opcao == 2:
                     usar_item()
                     return
                 elif opcao == 3:
                     chance = random.randint(1,3)
                     if chance == 1:
-                        print(f'\nVocê tentou fugir, mas o(a) {animal_aleatorio} te atacou e tirou {dano} pontos de vida')
+                        print(f'\nVocê tentou fugir, mas o(a) {animal_aleatorio} te atacou e tirou {dano_animal} pontos de vida')
+                        if vida <= 0:
+                            print(f"\n{nome}, você morreu por um(a) {animal_aleatorio}... ☠️")
+                            print("GAME OVER")
+                            with open('statusFinal.txt', 'a') as arquivo:
+                                arquivo.write(f'\nVoce perdeu o jogo ForestGame, morto por um {animal_aleatorio}...\nVida: {vida} | Energia: {energia} | Pontuacao: {pontuacao} | Mochila: {mochila}')
+                            exit()
                     elif chance == 2:
                         print(f'\nEssa foi por pouco! o(a) {animal_aleatorio} errou o ataque, mas você não conseguiu fugir')
                     else:
@@ -321,6 +346,7 @@ def buscar_comida():
                 else:
                     print("opção invalida, tente novamente")
                     return
+                    
         elif escolha == 3: 
             criar_pausa()
             chance = random.randint(1,4)
@@ -336,9 +362,9 @@ def buscar_comida():
                 else:
                     print("sua mochila está cheia!!")
         else:
-             criar_pausa()
-             print("escolha inválida!")
-             return
+            criar_pausa()
+            print("escolha inválida!")
+            return
         
     else:
         print('\nVocê procurou por comida mas não encontrou nada')
