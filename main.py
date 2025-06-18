@@ -243,7 +243,7 @@ def acessar_abrigo():
         print("\nVocê não tem um abrigo construido\n")
 
 def buscar_comida():
-    global vida, energia, mochila
+    global vida, energia, mochila, pontuacao
     print('\nVocê decide sair em busca de comida')
     criar_pausa()
     comidas = random.choice(list(itens.keys()))
