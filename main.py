@@ -269,6 +269,7 @@ def buscar_comida():
             chance = random.randint(1, 4)
             if chance == 1:
                 dano_animal = animais[animal_aleatorio]['dano']
+                
                 vida -= dano_animal
                 print(f'\nO(a) {animal_aleatorio} te viu! Você foi atacado e perdeu {dano_animal} de vida.') 
                 if vida <= 0:
@@ -282,6 +283,8 @@ def buscar_comida():
                 if len(mochila) < TAMANHO_MOCHILA:
                     mochila.append(comidas)
                     print(f'\nVocê conseguiu pegar o(a) {comidas} e fugir sem ser visto!')
+                    pontuacao += 25
+                    print(f'\nVocê ganhou 25 pontos ')
                 else:
                     print('\nVocê conseguiu pegar, mas a mochila está cheia e teve que deixar o item para trás.')
         elif escolha == 2:
@@ -312,6 +315,8 @@ def buscar_comida():
                     
                     if vida_animal <= 0:
                         print(f'\nVocê derrotou o {animal_aleatorio} e pegou 2 {comidas}!')
+                        pontuacao += 35
+                        print(f'\nVocê ganhou 35 pontos ')
                         for i in range(2):
                             if len(mochila) < TAMANHO_MOCHILA:
                                 mochila.append(comidas)
