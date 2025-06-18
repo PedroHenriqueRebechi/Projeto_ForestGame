@@ -234,12 +234,11 @@ def acessar_abrigo():
         print("Você acorda e tem um tempo tranquilo e ganha 20 de energia")
         if energia + 20 >= ENERGIA_MAXIMA :
             energia = ENERGIA_MAXIMA
-        elif energia == ENERGIA_MAXIMA:
-            print('\nSua energia está cheia')
         else:
             energia += 20
         if abrigo == 0:
             print("\nSeu abrigo está muito velho e desabou, construa um novo para recuperar energia\n")
+            abrigo_montado = False
     else:
         print("\nVocê não tem um abrigo construido\n")
 
@@ -270,7 +269,7 @@ def buscar_comida():
             chance = random.randint(1, 4)
             if chance == 1:
                 dano_animal = animais[animal_aleatorio]['dano']
-                vida -= dano
+                vida -= dano_animal
                 print(f'\nO(a) {animal_aleatorio} te viu! Você foi atacado e perdeu {dano_animal} de vida.') 
                 if vida <= 0:
                     print(f"\n{nome}, você morreu por um(a) {animal_aleatorio}... ☠️")
